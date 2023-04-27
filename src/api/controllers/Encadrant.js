@@ -2,39 +2,32 @@ const Encadrant = require('../models/Encadrant');
 
 const Doctorant = require('../models/Doctorant');
 
-const total = async (req, res) => {
-    try {
-      const Encadrants = await Encadrant.find();
-      let total = 0;
-      Encadrants.forEach(Encadrant => {
-        total++;
-      });
-      res.json({ total: total  });
-    } catch (error) {
-      res.status(500).send({ message: error.message });
+const ajouter = async (req, res) => {
+  try {
+    const { nomComplet, grade, etablissement } = req.body;
+    const encadrant = await Encadrant.findOne({ nomComplet, grade, etablissement });
+
+    if (encadrant) {
+      return res.status(409).json({ message: 'Encadrant already exists' , encadrant: encadrant  });
+    }else {
+      const newEncadrant = new Encadrant({ nomComplet, grade, etablissement });
+      await newEncadrant.save();
+
+      res.status(201).json({ message: 'Encadrant created successfully' , encadrant: newEncadrant });
     }
+  } catch (error) {
+    res.send({ status: 400, success: false, msg: error.message });
+  }
   }
 
-const DocsParEncad = async (req, res) => {
-    try {
-      const encadrants = await Encadrant.find();
-      const encadrantCounts = {};
-  
-      // Count references to each encadrant in the doctorant schema
-      for (const encadrant of encadrants) {
-        const count = await Doctorant.countDocuments({
-          $or: [
-            { directeurPrincipal: encadrant._id },
-            { coDirecteur: encadrant._id }
-          ]
-        });
-        encadrantCounts[encadrant.nomComplet] = count;
-      }
-  
-      res.send({ status: 200, success: true, counts: encadrantCounts });
-    } catch (error) {
-      res.send({ status: 400, success: false, msg: error.message });
-    }
+const allEncad = async (req, res) => {
+  try {
+    const Encadrants = await Encadrant.find();
+    res.json(Encadrants);
+  } catch (error) {
+    res.send({ status: 400, success: false, msg: error.message });
+  }
   }
 
-module.exports = { DocsParEncad , total }
+
+module.exports = { ajouter , allEncad  }

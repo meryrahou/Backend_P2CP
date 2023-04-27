@@ -1,0 +1,241 @@
+1 . 1 . recuperer id de tous les doctorants
+    requete:
+        GET http://localhost:9000/api/Doctorants/alldocsId
+
+    reponse:
+        [ {
+            "soutenu": { "stat": false , "date": null , "Pv": null },
+            "radie": { "stat": true , "date": "2022-05-01T00:00:00.000Z" , "Pv": "64495d6d44767fe791592d22" },
+            "_id": "6447d6e98e50e8637960a0d0",
+            "inscrit": true
+        } ]
+
+1 . 2 . tableau des doctorants
+    requete: 
+        GET http://localhost:9000/api/Doctorants/alldocs
+    
+    reponse:
+        tableau des doctorant
+
+2 . ajouter un Doctorant
+    requete:
+        POST http://localhost:9000/api/Doctorants/ajouter
+
+    .body:
+        {
+            "pv": {
+                "code": "PV001",
+                "date": "2022-05-01",
+                "url": "http://example.com",
+                "ordreDuJour": "Some topic"
+            },
+            "directeur": {
+                "nomComplet": "John Smith",
+                "grade": "Professor",
+                "etablissement": "Some university"
+            },
+            "codirecteur": null,
+            "nom": "Doeee",
+            "prenom": "Jjjane",
+            "dateNaissance": "2000-01-01",
+            "sexe": "F",
+            "telephone": 123456789,
+            "email": "jane.doe@example.com",
+            "premiereInscription": "2020-01-01",
+            "intituleeThese": "Some thesis title",
+            "laboratoire": "LMCS",
+            "option": "SI",
+            "typeDoctorat": "LMD",
+            "typeDiplome": "Master",
+            "etablissementOrigine": "Some other university"
+        }
+
+3 . re-inscription 
+    requete:
+        POST http://localhost:9000/api/Doctorants/reinscription
+    
+    .body:
+        {
+            "doctorants": ["6447d6e98e50e8637960a0d0", "6447d712570811d1882d4365"],
+            "pv": {
+                "code": "PVVVVVV",
+                "url": "https://example.com/PV-123",
+                "date": "2023-04-25"
+            }
+        }
+
+4 . modifier status
+    requete:
+        POST http://localhost:9000/api/Doctorants/modifierstatus
+    .body:
+        {
+            "doctorants": [ "6447d758ea40b620a0481685", "6447d758ea40b620a048167f" ],
+            "status": "soutenu",
+            "pv": {
+                "code": "pv_code",
+                "url": "pv_url",
+                "ordreDuJour": "pv_ordre_du_jour",
+                "date": "2022-05-01T00:00:00Z"
+            }
+        }
+5 . exporter xlsx
+    requete:
+        GET http://localhost:9000/api/Doctorants/exporter
+
+    reponse:
+        Base de donne exporter sous fichier: "DoctorantsData.xlsx"
+        fichier : DoctorantsData.xlsx
+
+6 . changement de these
+    requete:
+        POST http://localhost:9000/api/Doctorants/changementThese
+
+    body:
+        {
+            "doctorant": {
+                "id": "6447d6e98e50e8637960a0d0",
+                "intituleeThese": "New Thesis Title",
+                "changementThese": {
+                    "stat": true,
+                    "Pv": "644a5f946b145a68137357fd",
+                    "date": "2022-05-01T00:00:00.000Z"
+                }
+            }
+        }
+
+7 . ajouter siminaire
+    requete:
+        POST http://localhost:9000/api/Doctorants/siminaire
+
+    body:
+    {
+        "doctorantId": "6447d6e98e50e8637960a0d0",
+        "nom": "Doe",
+        "prenom": "John",
+        "dateNaissance": "1980-01-01",
+            "titre": "Lorem ipsum",
+            "resume": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+            "animateur": "Jane Doe"
+    }
+
+8 . FCT 
+    requete:
+        POST http://localhost:9000/api/Doctorants/majFCT
+    
+    body:
+    {
+        "doctorantid": "6447d6e98e50e8637960a0d0",
+        "FCT": "2023-05-01"
+    }
+
+9 . get doctorant by id 
+    requete:
+        GET http://localhost:9000/api/Doctorants/doctorant_id
+
+10 . STATISTIQUES
+10 . 1 . numerique
+    requete:
+        GET http://localhost:9000/api/Statistiques/StatNumerique
+    
+    reponse:
+    {
+        "totalDoctorants": 17,
+        "totalDirecteurs": 48,
+        "M": 6,
+        "F": 11,
+        "LMD": 8,
+        "Classique": 9,
+        "LMCS": 10,
+        "LCSI": 2,
+        "Autre": 5,
+        "inscrit": 2,
+        "radie": 8,
+        "differe": 3,
+        "soutenu": 3,
+        "nouveauInscrit": 0
+    }
+10 . 2 . nombre d'inscription par annee
+    requete:
+        GET http://localhost:9000/api/Statistiques/inscritParY
+    
+    reponse:
+    {
+        "2020": 5,
+        "2021": 6,
+        "2022": 4,
+        "2023": 2
+    }
+10 . 3 . duree du doctorat
+    requete:
+        GET http://localhost:9000/api/Statistiques/totalInscriParDoc
+
+    reponse:
+    [
+        {
+            "_id": 0,
+            "count": 4
+        },
+        {
+            "_id": 1,
+            "count": 3
+        },
+        {
+            "_id": 2,
+            "count": 4
+        },
+        {
+            "_id": 3,
+            "count": 4
+        },
+        {
+            "_id": 9,
+            "count": 2
+        }
+    ]
+10 . 4 . nombre de doctorants par directeur et codirecteur
+    requete:
+        GET http://localhost:9000/api/Statistiques/DocsParEncad
+    
+    reponse:
+    {
+        "encadrantCounts": {
+            "Edmond Kreiger": {
+                "directeur": 0,
+                "codirecteur": 0
+            },
+            "Gloria Murray": {
+                "directeur": 1,
+                "codirecteur": 0
+            },
+            "Kristi Hagenes": {
+                "directeur": 1,
+                "codirecteur": 3
+            },
+            "Leona Kirlin": {
+                "directeur": 0,
+                "codirecteur": 2
+            },
+            "Sheri Oberbrunner": {
+                "directeur": 2,
+                "codirecteur": 1
+            },
+        }
+    }
+
+11 . tableau des pvs 
+    requete:
+        GET 
+
+    reponse:
+    tableau des pvs
+
+12 . exporter PV xlsx
+    requete:
+        GET http://localhost:9000/api/PVs/exporter
+    
+    reponse:
+        Base de donne exporter sous fichier: "PVsData.xlsx"
+
+
+
+

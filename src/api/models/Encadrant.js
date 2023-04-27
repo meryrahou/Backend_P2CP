@@ -9,3 +9,7 @@ const encadrantSchema = new Schema({
 })
 
 module.exports = mongoose.model('Encadrant', encadrantSchema);
+
+
+
+

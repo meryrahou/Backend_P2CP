@@ -17,6 +17,7 @@ const doctorantSchema = new Schema({
     totalinscription: Number,
     intituleeThese: String,
     laboratoire: { type: String, enum: ['LMCS', 'LCSI', 'Autre...'] },
+    option: { type: String, enum: ['SI', 'SIQ' , 'Autre...'] },
     FCT: { type: Date, default: Date.now },
     listeCode_PV: [{
         type: mongoose.SchemaTypes.ObjectId,
@@ -29,12 +30,16 @@ const doctorantSchema = new Schema({
     typeDoctorat: { type: String, enum: ['LMD', 'Classique'] },
     typeDiplome: { type: String, enum: ['Master', 'Magistere' , 'Ingeniorat'] },
     etablissementOrigine: String,
+    Siminaire: [{
+        titre: { type: String, required: [true, 'titre field is required'], },
+        resume: { type: String, required: [true, 'resume field is required'], },
+        animateur: { type: String, required: [true, 'animateur field is required'], },
+    },],
 
     // --- Information directeur ---
     directeurPrincipal: {
         type: mongoose.SchemaTypes.ObjectId,
         ref: 'Encadrant',
-        required: [true, 'Encadrant field is required'],
         default: null,
     },
     coDirecteur: {
@@ -43,7 +48,8 @@ const doctorantSchema = new Schema({
         default: null,
     },
 
-    // --- Situation ---
+    // --- Status ---
+    observation: String,
     soutenu: {
         stat: Boolean,
         date: { type: Date, default: Date.now },
@@ -63,7 +69,6 @@ const doctorantSchema = new Schema({
             },
     },
     changementThese: {
-        nouvelleThese: String,
         stat: Boolean,
         date: { type: Date, default: Date.now },
         Pv: {

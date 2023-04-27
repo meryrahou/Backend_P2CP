@@ -9,11 +9,10 @@ app.use(express.json());
 connectDB();
 
 
-app.use('/api/doctorants', require('./routes/Doctorant'));
+app.use('/api/Doctorants', require('./routes/Doctorant'));
 app.use('/api/PVs', require('./routes/PV'));
 app.use('/api/Encadrants', require('./routes/Encadrant'));
-
-
+app.use('/api/Statistiques', require('./routes/Statistiques'));
 
 
 
