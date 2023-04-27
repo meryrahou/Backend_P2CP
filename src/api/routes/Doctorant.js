@@ -20,9 +20,13 @@ const router = express.Router();
   router.post('/modifierstatus', DoctorantController.modifierstatus);
   router.post('/changementThese', DoctorantController.changementThese);
   router.post('/majFCT', DoctorantController.majFCT);
+  router.post('/observation', DoctorantController.observation);
 
 // exportation xlsx des doctorants 
-router.get('/exporter', DoctorantController.exporter);
+  router.get('/exporter', DoctorantController.exporter);
+
+// recupere deux liste des Laboratoire + Option existant dans la base de donnee
+  router.get('/recupLaboOpt', DoctorantController.recupLaboOpt);
 
 
 // statistique

@@ -8,20 +8,32 @@ const mongoose = require('mongoose');
 // done & works
 const allDocsId = async (req , res ) =>  {
   try {
-    const doctorant = await Doctorant.find({}, '_id inscrit soutenu.stat soutenu.date soutenu.Pv radie.stat radie.date radie.Pv');
+    const doctorant = await Doctorant.find({}, '_id inscrit ');
+    // // const doctorant = await Doctorant.find({}, '_id inscrit soutenu.stat soutenu.date soutenu.Pv radie.stat radie.date radie.Pv');
     res.json(doctorant);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.send({status:400 , success:false , msg:error.message});
   }
   }
 
 // done & works
 const allDocs = async (req , res ) =>  {
   try {
-    const doctorant = await Doctorant.find();
-    res.json(doctorant);
+    const doctorants = await Doctorant.find()
+                        .populate('directeurPrincipal')
+                        .populate('coDirecteur');
+    let liste = [];
+
+    for (const doctorant of doctorants) {
+      const pvPromises = doctorant.listeCode_PV.map((pv) => PV.findById(pv));
+      const pvs = await Promise.all(pvPromises);
+      const doctorantWithPvs = { ...doctorant._doc, pv: pvs };
+      liste.push(doctorantWithPvs);
+    }
+
+    res.json( liste );
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.send({status:400 , success:false , msg:error.message});
   }
   }
 
@@ -138,7 +150,7 @@ const ajouter = async (req , res) => {
         res.json(savedDoctorant);
       }
     } catch (error) {
-      res.status(500).json({ error: error.message });
+      res.send({status:400 , success:false , msg:error.message});
     }
 };
 
@@ -175,8 +187,8 @@ const createFakeDoctorants = async (req, res) => {
         premiereInscription: faker.date.past(3),
         totalinscription: faker.random.number(9),
         intituleeThese: faker.lorem.words(3),
-        laboratoire: faker.random.arrayElement(['LMCS', 'LCSI', 'Autre...']),
-        option: faker.random.arrayElement(['SI', 'SIQ', 'Autre...']),
+        laboratoire: faker.random.arrayElement(['LMCS', 'LCSI' ]),
+        option: faker.random.arrayElement(['SI', 'SIQ' ]),
         FCT: null,
 
         // --- Cursus universitaire --- 
@@ -245,7 +257,9 @@ const createFakeDoctorants = async (req, res) => {
 const exporter = async ( req , res ) => {
     try {
 
-        const Doctorants = await Doctorant.find();
+        const Doctorants = await Doctorant.find()
+                            .populate('directeurPrincipal')
+                            .populate('coDirecteur');
 
         const workbook = new exceljs.Workbook();
         const worksheet = workbook.addWorksheet('Doctorants');
@@ -258,18 +272,31 @@ const exporter = async ( req , res ) => {
             {header: 'dateNaissance', key: 'dateNaissance', width: 10},
             {header: 'telephone', key: 'telephone', width: 10},
             {header: 'email', key: 'email', width: 10},
+
             {header: 'inscrit', key: 'inscrit', width: 10},
             {header: 'premiereInscription', key: 'premiereInscription', width: 10},
-            {header: 'intituleeThese', key: 'intituleeThese', width: 10},
-            {header: 'FCT', key: 'FCT', width: 10},
-            {header: 'laboratoire', key: 'laboratoire', width: 10},
-            {header: 'directeurPrincipal', key: 'directeurPrincipal', width: 10},
-            {header: 'coDirecteur', key: 'coDirecteur', width: 10},
-            {header: 'listeCode_PV', key: 'listeCode_PV', width: 10},
             {header: 'totalinscription', key: 'totalinscription', width: 10},
+            {header: 'intituleeThese', key: 'intituleeThese', width: 10},
+            {header: 'laboratoire', key: 'laboratoire', width: 10},
+            {header: 'option', key: 'option', width: 10},
+            {header: 'FCT', key: 'FCT', width: 10},
+            {header: 'listeCode_PV', key: 'listeCode_PV', width: 10},
+
             {header: 'typeDoctorat', key: 'typeDoctorat', width: 10},
             {header: 'typeDiplome', key: 'typeDiplome', width: 10},
             {header: 'etablissementOrigine', key: 'etablissementOrigine', width: 10},
+            // {header: 'Siminaire titre', key: 'Siminaire.titre' , width: 10},
+            // {header: 'Siminaire animateur', key: 'Siminaire.animateur', width: 10},
+            // {header: 'Siminaire resume', key: 'Siminaire.resume', width: 10},
+            
+            {header: 'directeur nom', key: 'directeur.nom', width: 10},
+            {header: 'directeur grade', key: 'directeur.grade', width: 10},
+            {header: 'directeur etablissement', key: 'directeur.etablissement', width: 10},
+            {header: 'co-directeur nom', key: 'co-directeur.nom', width: 10},
+            {header: 'co-directeur grade', key: 'co-directeur.grade', width: 10},
+            {header: 'co-directeur etablissement', key: 'co-directeur.etablissement', width: 10},
+
+            {header: 'observation', key: 'observation', width: 10},
             {header: 'soutenu stat', key: 'soutenu.stat', width: 10},
             {header: 'soutenu date', key: 'soutenu.date', width: 10},
             {header: 'soutenu PV', key: 'soutenu.Pv', width: 10},
@@ -279,12 +306,29 @@ const exporter = async ( req , res ) => {
             {header: 'changement these stat', key: 'changementThese.stat', width: 10},
             {header: 'changement these date', key: 'changementThese.date', width: 10},
             {header: 'changement these PV', key: 'changementThese.Pv', width: 10},
-            {header: 'changement these nouvelleThese', key: 'changementThese.nouvelleThese', width: 10},
         ];
 
         let count = 1;
 
         Doctorants.forEach( Doctorant => {
+          let titree = null;
+          let animateurr = null;
+          let resumee = null;
+          let directeurrr = null;
+          let codirecteurrr = null;
+          if ( typeof Doctorant.siminaire !== 'undefined' && Doctorant.siminaire.length > 0) {
+            let siminairee = Doctorant.siminaire[0];
+            titree = siminairee.titre
+            animateurr = siminairee.animateur
+            resumee = siminairee.resume
+          } 
+          if ( Doctorant.directeurPrincipal !== null ) {
+            directeurrr = Doctorant.directeurPrincipal
+          }
+          if ( Doctorant.coDirecteur !== null ) {
+            codirecteurrr = Doctorant.coDirecteur
+          }
+
 
             worksheet.addRow({
                 _id: Doctorant._id,
@@ -294,18 +338,31 @@ const exporter = async ( req , res ) => {
                 sexe: Doctorant.sexe,
                 telephone: Doctorant.telephone,
                 email: Doctorant.email,
+
                 inscrit: Doctorant.inscrit,
                 premiereInscription: Doctorant.premiereInscription,
                 totalinscription: Doctorant.totalinscription,
                 intituleeThese: Doctorant.intituleeThese,
                 laboratoire: Doctorant.laboratoire,
+                option: Doctorant.option,
                 FCT: Doctorant.FCT,
                 listeCode_PV: Doctorant.listeCode_PV,
+
                 typeDoctorat: Doctorant.typeDoctorat,
                 typeDiplome: Doctorant.typeDiplome,
                 etablissementOrigine: Doctorant.etablissementOrigine,
-                directeurPrincipal: Doctorant.directeurPrincipal,
-                coDirecteur: Doctorant.coDirecteur,
+                // 'Siminaire.titre': titree,
+                // 'Siminaire.animateur': animateurr,
+                // 'Siminaire.resume': resumee,
+
+                'directeur.nom': directeurrr.nomComplet,
+                'directeur.grade': directeurrr.grade,
+                'directeur.etablissement': directeurrr.etablissement,
+                'co-directeur.nom': codirecteurrr.nomComplet,
+                'co-directeur.grade': codirecteurrr.grade,
+                'co-directeur.etablissement': codirecteurrr.etablissement,
+               
+                observation: Doctorant.observation,
                 'soutenu.stat': Doctorant.soutenu.stat,
                 'soutenu.date': Doctorant.soutenu.date,
                 'soutenu.Pv': Doctorant.soutenu.Pv,
@@ -315,7 +372,6 @@ const exporter = async ( req , res ) => {
                 'changementThese.stat': Doctorant.changementThese.stat,
                 'changementThese.date': Doctorant.changementThese.date,
                 'changementThese.Pv': Doctorant.changementThese.Pv,
-                'changementThese.nouvelleThese': Doctorant.changementThese.nouvelleThese,
             });
 
             count += 1;
@@ -497,6 +553,32 @@ const siminaire = async (req, res) => {
     res.send({status:400 , success:false , msg:error.message});
   }
 }
+
+// done and works
+const observation = async (req, res) => {
+  try {
+  // recuperation des donnees
+    const { nom , prenom , dateNaissance , observation  } = req.body;
+
+  // recuperation du doctorant
+    let  doctorant = await Doctorant.findOne({ nom , prenom , dateNaissance });
+
+    if (!doctorant) {
+      return res.status(404).json({ message: 'Doctorant existe pas' });
+    } else {
+      doctorant.observation = observation;
+      await doctorant.save();
+    }
+  // envoie de reponse
+    res.json({
+      message: 'Observation ajoute !',
+      doctorantId: doctorant._id,
+      observation: doctorant.observation,
+    });
+  } catch (error) {
+    res.send({status:400 , success:false , msg:error.message});
+  }
+}
 // done & works
 const majFCT = async (req, res) => {
   try {
@@ -522,6 +604,31 @@ const majFCT = async (req, res) => {
     });
   } catch (error) {
     return res.status(500).json({ error: 'Internal Server Error' });
+  }
+}
+
+const recupLaboOpt = async  (req , res) => {
+  try {
+    // Get all distinct laboratoire and option values from doctorant documents in the database
+    const laboratoires = await Doctorant.distinct('laboratoire');
+    const options = await Doctorant.distinct('option');
+
+    // Filter out null and undefined values from the lists
+    const filteredLaboratoires = laboratoires.filter(laboratoire => laboratoire != null && laboratoire != undefined);
+    const filteredOptions = options.filter(option => option != null && option != undefined);
+
+    // Remove duplicates from the lists
+    const uniqueLaboratoires = [...new Set(filteredLaboratoires)];
+    const uniqueOptions = [...new Set(filteredOptions)];
+
+    // Return the lists as a response
+    res.json({
+      laboratoires: uniqueLaboratoires.length ? uniqueLaboratoires : ["LMCS", "LCSI"],
+      options: uniqueOptions.length ? uniqueOptions : ["SI", "SIQ"]
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Internal server error' });
   }
 }
 
@@ -646,8 +753,8 @@ const inscritParY = async (req, res) => {
 
 module.exports = 
 { 
-  allDocsId , allDocs , exporter , 
+  allDocsId , allDocs , exporter , recupLaboOpt ,
   ajouter , modifierstatus  ,  reinscription , changementThese , 
-  siminaire , majFCT ,
+  siminaire , majFCT , observation ,
   createFakeDoctorants , 
   nouvInscrit  , inscritParY , sexe , typeDoctorat , laboratoire , status , total }

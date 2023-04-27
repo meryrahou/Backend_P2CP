@@ -16,8 +16,8 @@ const doctorantSchema = new Schema({
     premiereInscription: { type: Date, default: Date.now },
     totalinscription: Number,
     intituleeThese: String,
-    laboratoire: { type: String, enum: ['LMCS', 'LCSI', 'Autre...'] },
-    option: { type: String, enum: ['SI', 'SIQ' , 'Autre...'] },
+    laboratoire: { type: String, required: [true, 'laboratoire field is required'], },
+    option: { type: String, required: [true, 'option field is required'], },
     FCT: { type: Date, default: Date.now },
     listeCode_PV: [{
         type: mongoose.SchemaTypes.ObjectId,

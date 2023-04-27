@@ -12,13 +12,13 @@ const allPV = async ( req , res ) => {
 
 const ajouter = async ( req , res ) => {
     try {
-        const { code , url , date } = req.body;
-        const pv = await PV.findOne({ code , url , date });
+        const { code , url , date , ordreDuJour } = req.body;
+        const pv = await PV.findOne({ code , url , date , ordreDuJour });
     
         if (pv) {
           return res.status(409).json({ message: 'PV already exists' , PV: pv });
         }else {
-          const newPV = new PV({ code, url, date });
+          const newPV = new PV({ code, url, date , ordreDuJour });
           await newPV.save();
     
           res.status(201).json({ message: 'PV created successfully' , PV: newPV });

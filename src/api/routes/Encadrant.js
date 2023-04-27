@@ -7,7 +7,7 @@ const router = express.Router();
   router.post('/ajouter', EncadrantController.ajouter );
 
 // recuperer tableau des encadrant
-router.get('/allEncad', EncadrantController.allEncad );
+  router.get('/allEncad', EncadrantController.allEncad );
 
 
 //get Encadrant by id
@@ -17,7 +17,7 @@ router.get('/allEncad', EncadrantController.allEncad );
       res.json(newEncadrant);
     } catch (error) {
       res.status(500).json({ error: error.message });
-    }
+    } 
 });
 
 module.exports = router;
