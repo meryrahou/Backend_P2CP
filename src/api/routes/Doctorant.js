@@ -7,36 +7,33 @@ const router = express.Router();
 // creation de 10 different doctorant
   router.post('/fake10doc' , DoctorantController.createFakeDoctorants);
 
-// recuperer la table des doctorant
-  router.get('/alldocs', DoctorantController.allDocs);
-// recuperer identifiants de tous les doctorants
+// TABLES DES PAGES FRONT
   router.get('/alldocsId', DoctorantController.allDocsId);
+  router.get('/tableDoctorants', DoctorantController.tableDoctorants);
+  router.get('/tableauChangementThese', DoctorantController.tableauChangementThese);
+  router.get('/tableauReinscription', DoctorantController.tableauReinscription);
+  router.get('/tableauModifStatus', DoctorantController.tableauModifStatus);
+  router.get('/tableauReinscriptionDiffere', DoctorantController.tableauReinscriptionDiffere);
+  router.get('/tableauExporter', DoctorantController.tableauExporter);
 
 
-// modification doctorant
+// FONCTIONNALITEE DES CARTES
   router.post('/ajouter' , DoctorantController.ajouter);
-  router.post('/siminaire', DoctorantController.siminaire);
   router.post('/reinscription', DoctorantController.reinscription);
   router.post('/modifierstatus', DoctorantController.modifierstatus);
   router.post('/changementThese', DoctorantController.changementThese);
-  router.post('/majFCT', DoctorantController.majFCT);
+  //update infp prrsonele
+  router.post('/siminaire', DoctorantController.siminaire);
   router.post('/observation', DoctorantController.observation);
-
-// exportation xlsx des doctorants 
+  router.post('/majFCT', DoctorantController.majFCT);
+  //importer
   router.get('/exporter', DoctorantController.exporter);
+  router.get('/modifierInfoDoc', DoctorantController.modifierInfoDoc);
+
 
 // recupere deux liste des Laboratoire + Option existant dans la base de donnee
   router.get('/recupLaboOpt', DoctorantController.recupLaboOpt);
-
-
-// statistique
-  router.get('/Statistique/sexe', DoctorantController.sexe);
-  router.get('/Statistique/typeDoctorat', DoctorantController.typeDoctorat);
-  router.get('/Statistique/laboratoire', DoctorantController.laboratoire);
-  router.get('/Statistique/status', DoctorantController.status);
-  router.get('/Statistique/total', DoctorantController.total);
-  router.get('/Statistique/nouvInscrit', DoctorantController.nouvInscrit);
-  router.get('/Statistique/inscritParY', DoctorantController.inscritParY);
+  router.get('/recupNomComplet', DoctorantController.recupNomComplet);
 
 
 // recuperer un doctorant par identidiant

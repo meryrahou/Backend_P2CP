@@ -3,12 +3,8 @@ const Encadrant = require('../models/Encadrant');
 const EncadrantController = require('../controllers/Encadrant');
 const router = express.Router();
 
-// ajouter un encadrant a la base de donnee
-  router.post('/ajouter', EncadrantController.ajouter );
-
 // recuperer tableau des encadrant
   router.get('/allEncad', EncadrantController.allEncad );
-
 
 //get Encadrant by id
   router.get('/:id', async (req, res) => {
@@ -18,6 +14,6 @@ const router = express.Router();
     } catch (error) {
       res.status(500).json({ error: error.message });
     } 
-});
+  });
 
 module.exports = router;

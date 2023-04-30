@@ -9,6 +9,7 @@ const router = express.Router();
     router.get('/DocsParEncad', StatistiquesController.DocsParEncad);
     router.get('/InscritParY', StatistiquesController.InscritParY);
     router.get('/totalInscriParDoc', StatistiquesController.totalInscriParDoc);
+    router.get('/filtre', StatistiquesController.filtre);
 
 
 module.exports = router ;

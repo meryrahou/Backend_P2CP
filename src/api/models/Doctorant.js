@@ -13,6 +13,7 @@ const doctorantSchema = new Schema({
 
     // --- information de these ---
     inscrit: Boolean,
+    differe: Boolean,
     premiereInscription: { type: Date, default: Date.now },
     totalinscription: Number,
     intituleeThese: String,
@@ -52,7 +53,6 @@ const doctorantSchema = new Schema({
     observation: String,
     soutenu: {
         stat: Boolean,
-        date: { type: Date, default: Date.now },
         Pv: {
             type: mongoose.SchemaTypes.ObjectId,
             ref: 'PV',
@@ -61,7 +61,6 @@ const doctorantSchema = new Schema({
     },
     radie: {
         stat: Boolean,
-        date: { type: Date, default: Date.now },
         Pv: {
             type: mongoose.SchemaTypes.ObjectId,
             ref: 'PV',
@@ -70,7 +69,6 @@ const doctorantSchema = new Schema({
     },
     changementThese: {
         stat: Boolean,
-        date: { type: Date, default: Date.now },
         Pv: {
             type: mongoose.SchemaTypes.ObjectId,
             ref: 'PV',

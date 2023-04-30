@@ -1,6 +1,9 @@
 var PV = require('../models/PV');
 const exceljs = require('exceljs');
 
+
+/* table page PV 
+    GET  */
 const allPV = async ( req , res ) => {
     try {
         const PVs = await PV.find();
@@ -10,6 +13,8 @@ const allPV = async ( req , res ) => {
       }
     }
 
+/* ajout d'un PV
+    POST  */
 const ajouter = async ( req , res ) => {
     try {
         const { code , url , date , ordreDuJour } = req.body;
@@ -28,11 +33,12 @@ const ajouter = async ( req , res ) => {
       }
     }
 
+/* function exporter tous les PV
+    GET  */
 const exporter = async ( req , res ) => {
     try {
 
         const PVs = await PV.find();
-
 
         const workbook = new exceljs.Workbook();
         const worksheet = workbook.addWorksheet('PVs');

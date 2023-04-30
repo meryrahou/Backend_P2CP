@@ -3,81 +3,88 @@
         GET http://localhost:9000/api/Doctorants/alldocsId
 
     reponse:
-        [ {
-            "soutenu": { "stat": false , "date": null , "Pv": null },
-            "radie": { "stat": true , "date": "2022-05-01T00:00:00.000Z" , "Pv": "64495d6d44767fe791592d22" },
-            "_id": "6447d6e98e50e8637960a0d0",
-            "inscrit": true
-        } ]
+    [ 
+        {
+        "_id": "6447d6e98e50e8637960a0d0",
+        "inscrit": true
+        }, ...
+    ]
 
-1 . 2 . tableau des doctorants
-    requete: 
-        GET http://localhost:9000/api/Doctorants/alldocs
+1 . 2 . table des doctorants
+    requete:
+        GET http://localhost:9000/api/Doctorants/tableDoctorants
     
     reponse:
-        tableau des doctorant
+        tableau des doctorants : all information
 
 2 . ajouter un Doctorant
     requete:
         POST http://localhost:9000/api/Doctorants/ajouter
 
     .body:
-        {
-            "pv": {
-                "code": "PV001",
-                "date": "2022-05-01",
-                "url": "http://example.com",
-                "ordreDuJour": "Some topic"
-            },
-            "directeur": {
-                "nomComplet": "John Smith",
-                "grade": "Professor",
-                "etablissement": "Some university"
-            },
-            "codirecteur": null,
-            "nom": "Doeee",
-            "prenom": "Jjjane",
-            "dateNaissance": "2000-01-01",
-            "sexe": "F",
-            "telephone": 123456789,
-            "email": "jane.doe@example.com",
-            "premiereInscription": "2020-01-01",
-            "intituleeThese": "Some thesis title",
-            "laboratoire": "LMCS",
-            "option": "SI",
-            "typeDoctorat": "LMD",
-            "typeDiplome": "Master",
-            "etablissementOrigine": "Some other university"
-        }
+    {
+        "nom": "merrr",
+        "prenom": "Jjjane",
+        "dateNaissance": "2000-01-01T00:00:00.000Z",
+        "sexe": "F",
+        "telephone": 123456789,
+        "email": "jane.doe@example.com",
+        "inscrit": true,
+        "differe": false,
+        "premiereInscription": "2020-01-01T00:00:00.000Z",
+        "totalinscription": 1,
+        "intituleeThese": "Some thesis title",
+        "laboratoire": "anything truly",
+        "option": "chuchu",
+        "FCT": null,
+        "listeCode_PV": [
+            "644e6a42e425cb8aaf8853fa"
+        ],
+        "typeDoctorat": "LMD",
+        "typeDiplome": "Master",
+        "etablissementOrigine": "Some other university",
+        "Siminaire": [],
+        "directeurPrincipal": "644e6a79e425cb8aaf885403",
+        "coDirecteur": null,
+        "observation": null,
+        "soutenu": {
+            "Pv": null
+        },
+        "radie": {
+            "Pv": null
+        },
+        "changementThese": {
+            "Pv": null
+        },
+        "_id": "644e6a79e425cb8aaf885406",
+        "__v": 0
+    }
 
-3 . re-inscription 
+3 . create 10 fake doctorant
     requete:
-        POST http://localhost:9000/api/Doctorants/reinscription
+        POST http://localhost:9000/api/Doctorants/fake10doc
+
+4 . table exporter
+    requete:
+        GET http://localhost:9000/api/Doctorants/tableauExporter
     
-    .body:
+    response:
+    [
         {
-            "doctorants": ["6447d6e98e50e8637960a0d0", "6447d712570811d1882d4365"],
-            "pv": {
-                "code": "PVVVVVV",
-                "url": "https://example.com/PV-123",
-                "date": "2023-04-25"
-            }
-        }
+            "_id": "644d8e72156e85db16a174e8",
+            "nom": "Mayer",
+            "prenom": "Ryley",
+            "premiereInscription": "2022-07-23T01:29:57.952Z",
+            "intituleeThese": "New Thesis Title",
+            "laboratoire": "LCSI",
+            "FCT": null,
+            "status": "inscrit",
+            "Lien PV": "https://example.com/PV-13",
+            "directeurPrincipale": "Rogelio Gaylord"
+        },
+        ...
+    ]
 
-4 . modifier status
-    requete:
-        POST http://localhost:9000/api/Doctorants/modifierstatus
-    .body:
-        {
-            "doctorants": [ "6447d758ea40b620a0481685", "6447d758ea40b620a048167f" ],
-            "status": "soutenu",
-            "pv": {
-                "code": "pv_code",
-                "url": "pv_url",
-                "ordreDuJour": "pv_ordre_du_jour",
-                "date": "2022-05-01T00:00:00Z"
-            }
-        }
 5 . exporter xlsx
     requete:
         GET http://localhost:9000/api/Doctorants/exporter
@@ -86,36 +93,144 @@
         Base de donne exporter sous fichier: "DoctorantsData.xlsx"
         fichier : DoctorantsData.xlsx
 
-6 . changement de these
+6 . table reinscription
+    requete:
+        GET http://localhost:9000/api/Doctorants/tableauReinscription
+    
+    response:
+    [
+        {
+            "_id": "644d8e72156e85db16a174e8",
+            "nom": "Mayer",
+            "prenom": "Ryley",
+            "premiereInscription": "2022-07-23T01:29:57.952Z",
+            "Lien PV": "https://example.com/PV-13",
+            "directeurPrincipale": "Rogelio Gaylord"
+        },
+        ...
+    ]
+
+7 . table reinscription differe
+    requete:
+        GET http://localhost:9000/api/Doctorants/tableauReinscription
+    
+    response:
+    [
+        {
+            "_id": "644d8e72156e85db16a174ee",
+            "nom": "Becker",
+            "prenom": "Nichole",
+            "premiereInscription": "2021-01-16T23:45:14.984Z",
+            "Lien PV": "est tempore quos",
+            "directeurPrincipal": "Clint Crist"
+        },
+        ...
+    ]
+
+8 . re-inscription 
+    requete:
+        POST http://localhost:9000/api/Doctorants/reinscription
+    
+    .body:
+    {
+        "doctorants": ["6447d6e98e50e8637960a0d0", "6447d712570811d1882d4365"],
+        "pv": {
+            "code": "PVVVVVV",
+            "url": "https://example.com/PV-123",
+            "date": "2023-04-25"
+        }
+    }
+
+9 . table Modification status
+    requete:
+        GET http://localhost:9000/api/Doctorants/tableauModifStatus
+    
+    response:
+    [
+        {
+            "_id": "644d8e72156e85db16a174e8",
+            "nom": "Mayer",
+            "prenom": "Ryley",
+            "premiereInscription": "2022-07-23T01:29:57.952Z",
+            "directeurPrincipal": "Rogelio Gaylord",
+            "status": "inscrit",
+            "Lien PV": "https://example.com/PV-13"
+        },
+        ...
+    ]
+
+10 . modifier status
+    requete:
+        POST http://localhost:9000/api/Doctorants/modifierstatus
+
+    .body:
+    {
+        "doctorants": [ "6447d758ea40b620a0481685", "6447d758ea40b620a048167f" ],
+        "status": "soutenu",
+        "pv": {
+            "code": "pv_code",
+            "url": "pv_url",
+            "ordreDuJour": "pv_ordre_du_jour",
+            "date": "2022-05-01T00:00:00Z"
+        }
+    }
+
+11 . table changement these
+    requete:
+        GET http://localhost:9000/api/Doctorants/tableauChangementThese
+    
+    response:
+    [
+        {
+            "_id": "644d8e72156e85db16a174eb",
+            "nom": "Bernier",
+            "prenom": "Cloyd",
+            "laboratoire": "LCSI",
+            "directeurPrincipale": "Dr. Rachael Crist"
+        },
+        ...
+    ]
+
+12 . changement de these
     requete:
         POST http://localhost:9000/api/Doctorants/changementThese
 
     body:
-        {
-            "doctorant": {
-                "id": "6447d6e98e50e8637960a0d0",
-                "intituleeThese": "New Thesis Title",
-                "changementThese": {
-                    "stat": true,
-                    "Pv": "644a5f946b145a68137357fd",
-                    "date": "2022-05-01T00:00:00.000Z"
-                }
-            }
+    {
+        "id": "644d8e72156e85db16a174e8",
+        "intituleeThese": "New Thesis Title",
+        "changementThese": {
+            "stat": true,
+            "date": null,
+            "Pv": "644e735602d468cc1eb59506"
         }
+    }
 
-7 . ajouter siminaire
+13 . ajouter siminaire
     requete:
         POST http://localhost:9000/api/Doctorants/siminaire
 
     body:
     {
-        "doctorantId": "6447d6e98e50e8637960a0d0",
-        "nom": "Doe",
-        "prenom": "John",
-        "dateNaissance": "1980-01-01",
-            "titre": "Lorem ipsum",
-            "resume": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-            "animateur": "Jane Doe"
+        "doctorantId": "644d8e72156e85db16a174e8",
+        "seminaires": [
+            {
+                "titre": "nostrum voluptates iusto a",
+                "resume": "ipsum cupiditate nam reiciendis eum ratione eveniet voluptate ut voluptates dolor libero sed non ea",
+                "animateur": "nam consectetur",
+                "_id": "644d8e72156e85db16a174e9"
+            },
+        ]
+    }
+
+14 . ajouter observation
+    requete:
+        POST http://localhost:9000/api/Doctorants/observation
+
+    body:
+    {
+        "doctorantId": "644d8e72156e85db16a174e8",
+        "observation": "je observeeeee"
     }
 
 8 . FCT 
@@ -124,37 +239,60 @@
     
     body:
     {
-        "doctorantid": "6447d6e98e50e8637960a0d0",
+        "doctorantId": "6447d6e98e50e8637960a0d0",
         "FCT": "2023-05-01"
     }
 
-9 . get doctorant by id 
+14 . recupere une liste des options et des laboratoire
     requete:
-        GET http://localhost:9000/api/Doctorants/doctorant_id
+        GET http://localhost:9000/api/Doctorants/recupLaboOpt
+    
+    response:
+    {
+        "laboratoires": [
+            "LCSI",
+            "LMCS",
+            "another labo"
+        ],
+        "options": [
+            "SI",
+            "SIQ",
+            "other option"
+        ]
+    }
 
-10 . STATISTIQUES
-10 . 1 . numerique
+15 . STATISTIQUES
+15 . 1 . numerique
     requete:
+
         GET http://localhost:9000/api/Statistiques/StatNumerique
     
     reponse:
-    {
-        "totalDoctorants": 17,
-        "totalDirecteurs": 48,
-        "M": 6,
-        "F": 11,
-        "LMD": 8,
-        "Classique": 9,
-        "LMCS": 10,
-        "LCSI": 2,
-        "Autre": 5,
-        "inscrit": 2,
-        "radie": 8,
-        "differe": 3,
-        "soutenu": 3,
-        "nouveauInscrit": 0
+   {
+        "totalDoctorants": 41,
+        "totalDirecteurs": 41,
+        "inscrit": 33,
+        "radie": 0,
+        "differe": 8,
+        "soutenu": 0,
+        "nouveauInscrit": 1,
+        "totalM": 25,
+        "Madvancement": -100,
+        "totalF": 16,
+        "Fadvancement": null,
+        "LMDtotal": 22,
+        "LMDadvancement": -80,
+        "totalClassique": 19,
+        "Classiqueadvancement": -100,
+        "totalLMCS": 17,
+        "LMCSadvancement": -100,
+        "totalLCSI": 23,
+        "LCSIAdvancement": -75,
+        "totalAutre": 1,
+        "AutreAdvancement": null
     }
-10 . 2 . nombre d'inscription par annee
+
+15 . 2 . nombre d'inscription par annee
     requete:
         GET http://localhost:9000/api/Statistiques/inscritParY
     
@@ -165,23 +303,16 @@
         "2022": 4,
         "2023": 2
     }
-10 . 3 . duree du doctorat
+
+15 . 3 . duree du doctorat
     requete:
         GET http://localhost:9000/api/Statistiques/totalInscriParDoc
 
     reponse:
     [
         {
-            "_id": 0,
-            "count": 4
-        },
-        {
             "_id": 1,
             "count": 3
-        },
-        {
-            "_id": 2,
-            "count": 4
         },
         {
             "_id": 3,
@@ -192,7 +323,8 @@
             "count": 2
         }
     ]
-10 . 4 . nombre de doctorants par directeur et codirecteur
+
+15 . 4 . nombre de doctorants par directeur et codirecteur
     requete:
         GET http://localhost:9000/api/Statistiques/DocsParEncad
     
@@ -222,51 +354,24 @@
         }
     }
 
-11 . tableau des pvs 
+15 . 5 . filtre
+    requete:
+        GET http://localhost:9000/api/Statistiques/filtre
+
+    reponse:
+    {
+        "count": 0,
+        "liste": []
+    }
+
+16 . tableau des pvs 
     requete:
         GET http://localhost:9000/api/PVs/allPV
 
     reponse:
-    tableau des pvs
+        tableau des pvs
 
-12 . exporter PV xlsx
-    requete:
-        GET http://localhost:9000/api/PVs/exporter
-    
-    reponse:
-        Base de donne exporter sous fichier: "PVsData.xlsx"
-
-13 . ajouter observation
-    requete:
-        POST http://localhost:9000/api/Doctorants/observation
-    
-    body:
-    {
-    "nom": "Bruen",
-            "prenom": "Donny",
-            "dateNaissance": "1994-02-09T17:14:31.895Z",
-    "observation": "je observeeeee"
-    }
-
-14 . recupere une liste des options et des laboratoire
-    requete:
-        GET http://localhost:9000/api/Doctorants/recupLaboOpt
-    
-    response:
-    {
-    "laboratoires": [
-        "LCSI",
-        "LMCS",
-        "another labo"
-    ],
-    "options": [
-        "SI",
-        "SIQ",
-        "other option"
-    ]
-}
-
-15 . ajouter pv
+17 . ajouter pv
     requete:
         POST http://localhost:9000/api/PVs/ajouter
     
@@ -276,8 +381,15 @@
         "url": "gggg",
         "date": "2000-10-10",
         "ordreDuJour": "stringtext"
-
     }
+
+18 . exporter PV xlsx
+    requete:
+        GET http://localhost:9000/api/PVs/exporter
+    
+    reponse:
+        Base de donne exporter sous fichier: "PVsData.xlsx"
+
 
 16 . tableau des encadrant
     requete:
@@ -286,17 +398,64 @@
     response:
     [
         {
-            "_id": "644ab55fe608dc7c3737cce9",
-            "nomComplet": "Lynn Oberbrunner",
-            "grade": "Dynamic Brand Agent",
-            "etablissement": "Russel - Shields",
+            "_id": "644d8e72156e85db16a174d2",
+            "nomComplet": "Dr. Rachael Crist",
+            "grade": "Central Assurance Representative",
+            "etablissement": "Gorczany - Stehr",
+            "telephone": 4373,
+            "email": "Colleen.Jerde@yahoo.com",
+            "__v": 0
+        }, ...
+    ]
+
+17 . liste nom prenom des Doctorants 
+    requete: 
+        GET http://localhost:9000/api/Doctorants/recupNomComplet
+    
+    response:
+    [
+        "Mayer Ryley",
+        "Bernier Cloyd",
+        "Becker Nichole", 
+        "Emmerich Grayson",
+        "Hauck Francesco",
+        "Casper Shane",
+    ]
+
+18 . modifier info personnel
+    requete:
+        POST http://localhost:9000/api/Doctorants/modifierInfoDoc
+    
+    body:
+    {
+        "id": "644d8e72156e85db16a174e8",
+        "nom": "may",
+        "prenom": "tyyyy",
+        "dateNaissance": "1983-09-06T13:44:35.207Z",
+        "sexe": "M",
+        "telephone": 2862,
+        "email": "Dawson.Murazik@gmail.com",
+        "laboratoire": "LCSI",
+        "option": "SIQ",
+        "typeDiplome": "Master",
+        "etablissementOrigine": "Toy, Reynolds and Klein",
+        "directeurPrincipal": {
+            "_id": "644d8e72156e85db16a174d2",
+            "nomComplet": "Dr. Rachael Crist",
+            "grade": "Central Assurance Representative",
+            "etablissement": "Gorczany - Stehr",
+            "telephone": 4373,
+            "email": "Colleen.Jerde@yahoo.com",
             "__v": 0
         },
-        {
-            "_id": "644ab55fe608dc7c3737cceb",
-            "nomComplet": "Georgia Bednar",
-            "grade": "Customer Web Engineer",
-            "etablissement": "Hagenes, Bernier and Mann",
+        "coDirecteur": {
+            "_id": "644d8e72156e85db16a174e0",
+            "nomComplet": "Clint Crist",
+            "grade": "National Integration Producer",
+            "etablissement": "Bailey - Rippin",
+            "telephone": 6036,
+            "email": "Liam.Frami@gmail.com",
             "__v": 0
-        }
-    ]
+        },
+        "__v": 1
+    }
